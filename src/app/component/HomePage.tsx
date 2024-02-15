@@ -1,10 +1,6 @@
 import React from "react";
 import Table from "./AddTask";
 import AddTask from "./AddTask";
-import Done from "./Done";
-import Pending from "./Pending";
-import Bugs from "./Bugs";
-import { cardTitle } from "../utils";
 
 const HomePage: React.FC = () => {
   return (
