@@ -1,8 +1,15 @@
 @tailwind base;
+
 @tailwind components;
 @tailwind utilities;
 
-:root {
+html {
+  width: 100%;
+  height: 100%;
+  background-color: #374866;
+}
+
+/* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
@@ -25,9 +32,10 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+body
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
-}
+} */
