@@ -18,12 +18,12 @@ export const dataCards = [
     title: "Doing",
     components: [
       {
-        id: 100,
-        name: "material ui",
+        id: 101,
+        name: "React-bootstrape",
       },
       {
-        id: 200,
-        name: "bootstrap",
+        id: 201,
+        name: "next-js",
       },
     ],
   },

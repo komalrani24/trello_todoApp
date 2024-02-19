@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import TextInputField from "./TextInputField";
 import { RiMenuAddLine } from "react-icons/ri";
-import { Draggable, Droppable } from "react-beautiful-dnd";
+import { Draggable } from "react-beautiful-dnd";
 
 interface titles {
   id: number;
@@ -33,24 +33,17 @@ const AddTask: React.FC<titles> = ({ title, id, components }) => {
   return (
     <>
       <div className="rounded-lg flex flex-col items-start bg-[#F1F2F4] my-10 mx-4 px-6">
-        <h1 className="text-[#42526F] mt-3">{title}</h1>
-
-        {title === "AddTask" && (
-          <TextInputField
-            placeholder="enter task"
-            // onChange={handleChange}
-            value={inputValue}
-          />
-        )}
-
+        {title}
         <ul>
           {components.map((item, i) => (
             <Draggable key={item.id} draggableId={item.id.toString()} index={i}>
               {(provided) => (
                 <li
-                  draggable="true"
                   className="flex items-center my-3 border-[#B7BEC9] border-2 h-10 -mr-4 rounded-md  font-semibold
-    hover:border-blue-950 w-[250px] text-[#42526F] "
+                  hover:border-blue-950 w-[250px] text-[#42526F] "
+                  {...provided.dragHandleProps}
+                  {...provided.draggableProps}
+                  ref={provided.innerRef}
                 >
                   {item.name}
                 </li>
