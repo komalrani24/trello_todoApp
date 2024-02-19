@@ -12,13 +12,16 @@ import {
 // import { dataCards } from "../utils/data";
 import CreateNewCard from "./CreateNewCard";
 import { FaPlus } from "react-icons/fa";
+// import { title } from "process";
 
 interface data {
   id: number;
   title: string;
   components: Components[];
 }
-const addNewcard = () => {};
+const addNewcard = () => {
+  // console.log(title)
+};
 const HomePage: React.FC = () => {
   const [card, setCard] = useState<data[]>([]);
 
@@ -55,7 +58,6 @@ const HomePage: React.FC = () => {
       setCard([...newData]);
     }
   };
-  console.log(card);
 
   return (
     <>

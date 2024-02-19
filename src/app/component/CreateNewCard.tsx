@@ -36,7 +36,7 @@ const CreateNewCard = (props: any) => {
           ></input>
           <div
             className=" hover:text-white bg-[#6B7588] p-3 rounded-md"
-            onClick={props.addValueOnCard}
+            onClick={props.addNewcard(title)}
           >
             Add a card
           </div>
