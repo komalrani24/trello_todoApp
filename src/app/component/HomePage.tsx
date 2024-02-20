@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 
 import Table from "./AddTask";
 import AddTask from "./AddTask";
@@ -12,6 +12,7 @@ import {
 // import { dataCards } from "../utils/data";
 import CreateNewCard from "./CreateNewCard";
 import { FaPlus } from "react-icons/fa";
+import TextInputField from "./TextInputField";
 // import { title } from "process";
 
 interface data {
@@ -19,11 +20,9 @@ interface data {
   title: string;
   components: Components[];
 }
-const addNewcard = () => {
-  // console.log(title)
-};
+
 const HomePage: React.FC = () => {
-  const [card, setCard] = useState<data[]>([]);
+  const [card, setCard] = useState<data[]>([]); //for input card
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
@@ -59,13 +58,36 @@ const HomePage: React.FC = () => {
     }
   };
 
+  const addValueNewCard = (title: string) => {
+    if (title.trim()) {
+      const isUnique = card.every((item) => item.title !== title);
+      if (isUnique)
+        setCard((prev) => [
+          ...prev,
+          {
+            id: card.length + 1,
+            title: title,
+            components: [],
+          },
+        ]);
+      else {
+        alert("title should be unique");
+      }
+    } else {
+      alert("title should not be empty");
+    }
+  };
+  console.log(card);
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
         <h1 className="text-center font-bold text-2xl text-[#fff] bg-[#4D5D77] h-12 flex items-center justify-center p-4">
           TODO LIST
         </h1>
-        <CreateNewCard addNewcard={addNewcard} />
+        <CreateNewCard onClick={addValueNewCard} />
+
+        {/* <TextInputField onChange={(e) => e.target.value} /> */}
+
         <div className="flex">
           <div className="flex">
             {card.length &&

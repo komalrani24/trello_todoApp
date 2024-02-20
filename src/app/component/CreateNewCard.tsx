@@ -1,42 +1,50 @@
 import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import TextInputField from "./TextInputField";
-import AddTask from "./AddTask";
 
 const CreateNewCard = (props: any) => {
   const [showCard, setshowCard] = useState<boolean>(false);
   const [title, setTitle] = useState("");
   const addNewcard = () => {
     setshowCard(!showCard);
-    console.log();
+    setTitle("");
   };
   const addTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.currentTarget.value);
   };
   console.log(title);
+
   return (
     <>
-      <div
-        className="h-12 w-[200px] bg-[#F1F2F4] py-3 px-8 my-5 rounded-md flex items-center
+      {!showCard ? (
+        <div
+          className="h-12 w-[200px] bg-[#F1F2F4] py-3 px-8 my-5 rounded-md flex items-center
       justify-between"
-        onClick={addNewcard}
-      >
-        <span>
-          <FaPlus />
-        </span>
-        Add Card
-      </div>
-      {showCard && (
-        <div className="flex gap-2">
-          <input
-            type="text"
+          onClick={(e) => {
+            e.stopPropagation();
+            addNewcard();
+          }}
+        >
+          <span>
+            <FaPlus />
+          </span>
+          Add Card
+        </div>
+      ) : (
+        <div className="flex gap-10 items-center ">
+          <TextInputField
+            className="border-none h-10 rounded-md p-2"
             placeholder="title"
             value={title}
             onChange={addTitle}
-          ></input>
+          />
+
           <div
-            className=" hover:text-white bg-[#6B7588] p-3 rounded-md"
-            onClick={props.addNewcard(title)}
+            className="text-white bg-[#6B7588] p-3 rounded-md h-12 "
+            onClick={(e) => {
+              e.stopPropagation();
+              props.onClick(title);
+            }}
           >
             Add a card
           </div>

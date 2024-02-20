@@ -5,7 +5,7 @@ interface inputType {
   name?: string;
   value?: string | undefined;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
+  className?:string}
 const TextInputField: React.FC<inputType> = ({ placeholder, ...rest }) => {
   console.log({ ...rest }, "pass");
   return (
