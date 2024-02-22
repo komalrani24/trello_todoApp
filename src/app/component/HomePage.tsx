@@ -3,12 +3,7 @@ import React, { Component, useEffect, useState } from "react";
 
 import Table from "./AddTask";
 import AddTask from "./AddTask";
-import {
-  DragDropContext,
-  Draggable,
-  DropResult,
-  Droppable,
-} from "react-beautiful-dnd";
+import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 // import { dataCards } from "../utils/data";
 import CreateNewCard from "./CreateNewCard";
 import { FaPlus } from "react-icons/fa";
@@ -18,7 +13,7 @@ import TextInputField from "./TextInputField";
 interface data {
   id: number;
   title: string;
-  components: Components[];
+  components: [];
 }
 
 const HomePage: React.FC = () => {
@@ -77,7 +72,24 @@ const HomePage: React.FC = () => {
       alert("title should not be empty");
     }
   };
-  console.log(card);
+  const makeCardList = (index: number | undefined, title: string) => {
+    if (index !== undefined && index >= 0 && index < card.length) {
+      setCard((prev: any) => [
+        ...prev.slice(0, index),
+        {
+          ...prev[index],
+          components: [
+            ...prev[index].components,
+            {
+              name: title,
+              id: prev[index].components.length + 1,
+            },
+          ],
+        },
+        ...prev.slice(index + 1),
+      ]);
+    }
+  };
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
@@ -101,7 +113,9 @@ const HomePage: React.FC = () => {
                     >
                       <AddTask
                         id={item.id}
+                        index={index}
                         title={item.title}
+                        makeCardList={makeCardList}
                         components={item.components}
                       />
                       {provided.placeholder}

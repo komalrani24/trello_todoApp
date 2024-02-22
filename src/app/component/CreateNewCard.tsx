@@ -7,7 +7,6 @@ const CreateNewCard = (props: any) => {
   const [title, setTitle] = useState("");
   const addNewcard = () => {
     setshowCard(!showCard);
-    setTitle("");
   };
   const addTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.currentTarget.value);
@@ -44,6 +43,7 @@ const CreateNewCard = (props: any) => {
             onClick={(e) => {
               e.stopPropagation();
               props.onClick(title);
+              setTitle("");
             }}
           >
             Add a card
