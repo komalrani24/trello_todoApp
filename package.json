@@ -4,9 +4,8 @@
   "homepage": "https://komalrani24.github.io/trello_todoApp",
   "private": true,
   "scripts": {
-   
-         "predeploy": "npm run build",
-         "deploy": "gh-pages -d build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -14,7 +13,9 @@
   },
   "dependencies": {
     "@flaticon/flaticon-uicons": "^3.1.0",
+    "@types/firebase": "^3.2.1",
     "@types/react-beautiful-dnd": "^13.1.8",
+    "firebase": "^10.8.0",
     "immutability-helper": "^3.1.1",
     "next": "14.1.0",
     "react": "^18",

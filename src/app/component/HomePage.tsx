@@ -1,14 +1,21 @@
 "use client";
 import React, { Component, useEffect, useState } from "react";
-
-import Table from "./AddTask";
+import { db } from "../firebaseConfig";
+import { ref } from "firebase/storage";
+import {
+  collection,
+  addDoc,
+  setDoc,
+  doc,
+  getDocs,
+  onSnapshot,
+} from "firebase/firestore";
 import AddTask from "./AddTask";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
-// import { dataCards } from "../utils/data";
+
 import CreateNewCard from "./CreateNewCard";
 import { FaPlus } from "react-icons/fa";
 import TextInputField from "./TextInputField";
-// import { title } from "process";
 
 interface data {
   id: number;
@@ -18,6 +25,34 @@ interface data {
 
 const HomePage: React.FC = () => {
   const [card, setCard] = useState<data[]>([]); //for input card
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "card"), (snapshot) => {
+      let itemsData: data[] = [];
+      snapshot.forEach((doc) => {
+        const data = doc.data(); // Get the data from the document
+        const { id, title, components } = data; // Destructure the data
+        itemsData.push({ id, title, components }); // Push the data to itemsData array
+      });
+      setCard(itemsData);
+    });
+    return () => unsubscribe();
+  }, []);
+  // const fetchData = async () => {
+  //   const querySnapshot = await getDocs(collection(db, "card"));
+  //   const newData: data[] = [];
+  //   querySnapshot.forEach((doc) => {
+  //     let obj: any = {
+  //       ...doc.data(),
+  //       id: doc.id,
+  //     };
+  //     newData.push(obj);
+  //   });
+  //   setCard(newData);
+  //   console.log(newData, "search");
+  // };
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
@@ -53,25 +88,46 @@ const HomePage: React.FC = () => {
     }
   };
 
-  const addValueNewCard = (title: string) => {
+  // const addValueNewCard = (title: string) => {
+  //   if (title.trim()) {
+  //     const isUnique = card.every((item) => item.title !== title);
+  //     if (isUnique)
+  //       setCard((prev) => [
+  //         ...prev,
+  //         {
+  //           id: card.length + 1,
+  //           title: title,
+  //           components: [],
+  //         },
+  //       ]);
+  //     else {
+  //       alert("title should be unique");
+  //     }
+  //   } else {
+  //     alert("title should not be empty");
+  //   }
+  // };
+
+  //store data on firebase
+  const addValueNewCard = async (title: string) => {
     if (title.trim()) {
       const isUnique = card.every((item) => item.title !== title);
-      if (isUnique)
-        setCard((prev) => [
-          ...prev,
-          {
-            id: card.length + 1,
-            title: title,
-            components: [],
-          },
-        ]);
-      else {
+      let obj = {
+        title: title,
+        components: [],
+      };
+      if (isUnique) {
+        try {
+          let res = await addDoc(collection(db, "card"), obj);
+        } catch (error) {}
+      } else {
         alert("title should be unique");
       }
     } else {
       alert("title should not be empty");
     }
   };
+
   const makeCardList = (index: number | undefined, title: string) => {
     if (index !== undefined && index >= 0 && index < card.length) {
       setCard((prev: any) => [
@@ -90,17 +146,33 @@ const HomePage: React.FC = () => {
       ]);
     }
   };
+  console.log(card, "card");
+
+  // const addData = async () => {
+  //   try {
+  //     let res = await addDoc(collection(db, "card"), { name: item });
+  //     setItem("");
+  //     console.log(res, "response");
+  //   } catch (error) {}
+  // };
+
   return (
     <>
       <DragDropContext onDragEnd={onDragEnd}>
-        <h1 className="text-center font-bold text-2xl text-[#fff] bg-[#4D5D77] h-12 flex items-center justify-center p-4">
+        <h1
+          className="text-center font-bold text-2xl text-[#fff] bg-[#4D5D77] h-12 
+        flex items-center justify-center p-4"
+        >
           TODO LIST
         </h1>
-        <CreateNewCard onClick={addValueNewCard} />
 
-        {/* <TextInputField onChange={(e) => e.target.value} /> */}
+        <div className="flex flex-row-reverse justify-end w-fit">
+          <div className="mt-5">
+            <CreateNewCard onClick={addValueNewCard} />
+          </div>
 
-        <div className="flex">
+          {/* <TextInputField onChange={(e) => e.target.value} /> */}
+
           <div className="flex">
             {card.length &&
               card.map((item, index) => (

@@ -17,36 +17,64 @@ const CreateNewCard = (props: any) => {
     <>
       {!showCard ? (
         <div
-          className="h-12 w-[200px] bg-[#F1F2F4] py-3 px-8 my-5 rounded-md flex items-center
-      justify-between"
+          className="h-12 w-[200px] bg-[#fff] py-3 px-8 my-5 
+          cursor-pointer rounded-md flex items-center
+          gap-5"
           onClick={(e) => {
             e.stopPropagation();
             addNewcard();
           }}
         >
           <span>
-            <FaPlus />
+            <svg
+              className="size-3"
+              width="24"
+              height="24"
+              role="presentation"
+              focusable="false"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 3C11.4477 3 11 3.44772 11 4V11L4 11C3.44772 11 3 11.4477 3 12C3 12.5523 3.44772 13 4 13H11V20C11 20.5523 11.4477 21 12 21C12.5523 21 13 20.5523 13 20V13H20C20.5523 13 21 12.5523 21 12C21 11.4477 20.5523 11 20 11L13 11V4C13 3.44772 12.5523 3 12 3Z"
+                fill="currentColor"
+              ></path>
+            </svg>
           </span>
           Add Card
         </div>
       ) : (
-        <div className="flex gap-10 items-center ">
+        <div className="  w-[300px]  bg-[#fff] my-5 rounded-md flex flex-col gap-3 px-3 ">
+          {/* <div
+            className="flex  items-center my-3 border-[#B7BEC9] border-2 h-10 -mr-4 rounded-md  font-semibold
+  w-[250px] hover:border-[rgb(12,102,228)] px-3"
+          > */}
           <TextInputField
-            className="border-none h-10 rounded-md p-2"
+            className=" h-10 rounded-md p-2 text-sm text-[#6D7A8F] border-2 mt-3
+             hover:border-[rgb(12,102,228)]"
             placeholder="title"
             value={title}
             onChange={addTitle}
           />
 
-          <div
-            className="text-white bg-[#6B7588] p-3 rounded-md h-12 "
-            onClick={(e) => {
-              e.stopPropagation();
-              props.onClick(title);
-              setTitle("");
-            }}
-          >
-            Add a card
+          <div className="flex">
+            <div
+              className="text-white bg-[rgb(12,102,228)] flex items-center mx-2
+            rounded-md h-10 pl-1 w-24 mb-3 "
+              onClick={(e) => {
+                e.stopPropagation();
+                props.onClick(title);
+                setTitle("");
+              }}
+            >
+              Add a card
+            </div>
+            {/* <button
+              className="text-white bg-[rgb(12,102,228)] flex items-center justify-center mx-2
+            rounded-md h-10 pl-1 w-24 mb-3 "
+            >
+              Delete
+            </button> */}
           </div>
         </div>
       )}
