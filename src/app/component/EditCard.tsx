@@ -11,7 +11,7 @@ const EditCard = (props: any) => {
     >
       <h1 className="flex items-center justify-center bg-[#a7b3c9] text-[#42526F] h-8 w-full font-bold text-md text-[]">
         {" "}
-        List Action{" "}
+        List Action
         <span className="ml-5 cursor-pointer">
           <RxCross1 onClick={props.hideEditCard} />
         </span>
@@ -27,18 +27,11 @@ const EditCard = (props: any) => {
               <MdOutlineModeEdit />
             </span>
           </div>
+
           <div
             className="flex items-center justify-between hover:bg-[#6B7588]
           hover:text-[white] h-8 px-3"
-          >
-            <li>Update</li>
-            <span>
-              <MdOutlineTipsAndUpdates />
-            </span>
-          </div>
-          <div
-            className="flex items-center justify-between hover:bg-[#6B7588]
-          hover:text-[white] h-8 px-3"
+            onClick={props.handleDeleteItem}
           >
             <li>Delete</li>
             <span>

@@ -5,10 +5,10 @@ import { ref } from "firebase/storage";
 import {
   collection,
   addDoc,
-  setDoc,
   doc,
-  getDocs,
   onSnapshot,
+  deleteDoc,
+  updateDoc,
 } from "firebase/firestore";
 import AddTask from "./AddTask";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
@@ -16,43 +16,34 @@ import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import CreateNewCard from "./CreateNewCard";
 import { FaPlus } from "react-icons/fa";
 import TextInputField from "./TextInputField";
+import EditCard from "./EditCard";
 
 interface data {
-  id: number;
+  // newId: string;
+  id: string | number;
+
   title: string;
   components: [];
 }
 
 const HomePage: React.FC = () => {
   const [card, setCard] = useState<data[]>([]); //for input card
+  // const [openEditCard, setOpenEditCard] = useState<boolean>(false);
+
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "card"), (snapshot) => {
       let itemsData: data[] = [];
       snapshot.forEach((doc) => {
+        let id = doc.id;
+        console.log(doc.id, "id");
         const data = doc.data(); // Get the data from the document
-        const { id, title, components } = data; // Destructure the data
+        const { title, components } = data; // Destructure the data
         itemsData.push({ id, title, components }); // Push the data to itemsData array
       });
       setCard(itemsData);
     });
     return () => unsubscribe();
   }, []);
-  // const fetchData = async () => {
-  //   const querySnapshot = await getDocs(collection(db, "card"));
-  //   const newData: data[] = [];
-  //   querySnapshot.forEach((doc) => {
-  //     let obj: any = {
-  //       ...doc.data(),
-  //       id: doc.id,
-  //     };
-  //     newData.push(obj);
-  //   });
-  //   setCard(newData);
-  //   console.log(newData, "search");
-  // };
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
@@ -74,9 +65,15 @@ const HomePage: React.FC = () => {
         source.index,
         1
       );
-      console.log(item);
+      console.log(item, "item");
       newData[newDroppableIndex].components.splice(destination.index, 0, item);
-      setCard([...newData]);
+      newData.forEach(async (cardData) => {
+        const postDocRef = doc(db, "card", String(cardData.id));
+        const updatedFields = { components: cardData.components };
+        await updateDoc(postDocRef, updatedFields);
+      });
+
+      setCard(newData);
     } else {
       const newData = [...JSON.parse(JSON.stringify(card))]; //shallow copy concept
       const droppableIndex = newData.findIndex(
@@ -128,33 +125,37 @@ const HomePage: React.FC = () => {
     }
   };
 
-  const makeCardList = (index: number | undefined, title: string) => {
+  const makeCardList = async (
+    index: number | undefined,
+    title: string,
+    id: number | string
+  ) => {
     if (index !== undefined && index >= 0 && index < card.length) {
-      setCard((prev: any) => [
-        ...prev.slice(0, index),
-        {
-          ...prev[index],
-          components: [
-            ...prev[index].components,
-            {
-              name: title,
-              id: prev[index].components.length + 1,
-            },
-          ],
-        },
-        ...prev.slice(index + 1),
-      ]);
+      const selectedCard: any = card[index];
+
+      selectedCard.components.push({
+        name: title,
+        id: `id${index}${selectedCard.components.length + 1}`,
+      });
+      console.log(selectedCard, "after");
+      const postDocRef = doc(db, "card", String(id));
+      const updatedFields = {
+        components: selectedCard.components, // Update components array
+      };
+      await updateDoc(postDocRef, updatedFields);
     }
   };
   console.log(card, "card");
 
-  // const addData = async () => {
-  //   try {
-  //     let res = await addDoc(collection(db, "card"), { name: item });
-  //     setItem("");
-  //     console.log(res, "response");
-  //   } catch (error) {}
-  // };
+  const handleDeleteItem = async (id: string | number) => {
+    try {
+      await deleteDoc(doc(db, "card", String(id)));
+
+      console.log("Document successfully deleted!");
+    } catch (error) {
+      console.error("Error deleting document: ", error);
+    }
+  };
 
   return (
     <>
@@ -189,7 +190,9 @@ const HomePage: React.FC = () => {
                         title={item.title}
                         makeCardList={makeCardList}
                         components={item.components}
+                        handleDeleteItem={handleDeleteItem}
                       />
+
                       {provided.placeholder}
                     </div>
                   )}

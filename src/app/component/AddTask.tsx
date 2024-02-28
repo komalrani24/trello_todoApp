@@ -9,23 +9,33 @@ import { ImCross } from "react-icons/im";
 import { BsThreeDots } from "react-icons/bs";
 import { FaPencil } from "react-icons/fa6";
 import EditCard from "./EditCard";
+import { RxCross1 } from "react-icons/rx";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 
 interface titles {
   index?: number;
-  id: number;
+  id: number | string;
   title: string;
   components: [];
-  makeCardList: (index: number | undefined, title: string) => void; // Define the makeCardList function type
-   
+  makeCardList: (
+    index: number | undefined,
+    title: string,
+    id: string | number
+  ) => void; // Define the makeCardList function type
+  handleDeleteItem: (id: string | number) => Promise<void>;
 }
 
 const AddTask: React.FC<titles> = ({
   title,
   index,
+  id,
   components,
   makeCardList,
+  handleDeleteItem,
 }) => {
   const [addNewValue, setAddNewValue] = useState<string>("");
+  console.log(id, "id");
 
   const [showInput, setShowInput] = useState<boolean>(false);
   const [openEditCard, setOpenEditCard] = useState<boolean>(false);
@@ -43,27 +53,35 @@ const AddTask: React.FC<titles> = ({
   return (
     <>
       <div
-        className="rounded-lg flex flex-col items-start  bg-[#F1F2F4] 
-      my-10 mx-4 px-3 py-5 h-fit gap-3"
+        className="rounded-[12px] flex flex-col items-start  bg-[#F1F2F4] shadow-raised
+      my-10 mx-4 px-3 py-2 h-fit gap-2"
       >
         <div className="flex items-center justify-between w-full">
           <div className="text-sm font-bold text-[#172B4D]"> {title}</div>
 
-          <div>
-            <BsThreeDots className="cursor-pointer" onClick={showEditCard} />
+          <div className="flex items-center justify-center">
+            <BsThreeDots
+              className="cursor-pointer hover:bg-[#626f86] h-5 w-5 rounded-sm"
+              onClick={showEditCard}
+            />
           </div>
         </div>
 
         {components.map((item: Components, i: number) => (
           <Draggable draggableId={item.id.toString()} index={i}>
             {(provided) => (
-              <div ref={provided.innerRef} {...provided.draggableProps}>
+              <div
+                ref={provided.innerRef}
+                {...provided.draggableProps}
+                className="w-full"
+              >
                 <>
                   {
                     <div
                       key={i}
-                      className="flex  items-center my-3 border-[#B7BEC9]
-                       border-2 h-10 -mr-4 rounded-md  font-semibold  hover:border-blue-950 w-[250px]"
+                      className="flex items-center my-1 border-[#B7BEC9] bg-[#ffffff]
+                       border-1 h-10 -mr-4 rounded-md text-[#2F415F] text-sm
+                       hover:border-blue-950 w-[250px] px-3 font-normal"
                       {...provided.dragHandleProps}
                     >
                       {item.name}
@@ -97,13 +115,16 @@ const AddTask: React.FC<titles> = ({
         </div>
 
         <button type="submit">
-          <div className="flex gap-4 items-center mb-3  rounded-md pr-4 min-w-[250px] ">
+          <div className="flex gap-4 items-center   rounded-md pr-4 min-w-[250px] ">
             {!showInput ? (
-              <div className="flex items-center hover:bg-[#6B7588] h-8 rounded-md">
+              <div
+                className="flex items-center hover:bg-[#6B7588] h-8
+               rounded-md justify-start w-full p-2 font-bold transition-colors duration-85 ease-in-out"
+              >
                 <>
                   <span>
                     <svg
-                      className="size-3 "
+                      className="size-4 text-[#44546F]  "
                       width="24"
                       height="24"
                       role="presentation"
@@ -120,29 +141,29 @@ const AddTask: React.FC<titles> = ({
 
                   <div
                     onClick={showInputField}
-                    className="text-[#42526F] hover:text-white   p-3 rounded-md group"
+                    className="text-[#44546F] text-sm p-3 rounded-md group"
                   >
-                    Add List
+                    Add a Card
                   </div>
                 </>
               </div>
             ) : (
               // </div>
               <>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 w-full">
                   <button
-                    className="text-[#fff] bg-[rgb(12,102,228)] h-8 w-16 rounded-md"
+                    className="text-[#fff] bg-[rgb(12,102,228)] h-8 w-[40%] rounded-md"
                     type="submit"
                     onClick={() => {
-                      makeCardList(index, addNewValue);
+                      makeCardList(index, addNewValue, id);
 
                       setAddNewValue("");
                       setShowInput(false);
                     }}
                   >
-                    Add
+                    Add card
                   </button>
-                  <span onClick={() => {}}>
+                  <span className="h-8 w-8 rounded-md flex items-center justify-center hover:bg-[#6B7588] ">
                     <svg
                       width="24"
                       height="24"
@@ -150,7 +171,7 @@ const AddTask: React.FC<titles> = ({
                       focusable="false"
                       viewBox="0 0 24 24"
                       xmlns="http://www.w3.org/2000/svg"
-                      className="size-5"
+                      className="size-5 text-[#172B4D]"
                     >
                       <path
                         fill-rule="evenodd"
@@ -168,7 +189,12 @@ const AddTask: React.FC<titles> = ({
 
         {openEditCard && (
           <div className="absolute ">
-            <EditCard hideEditCard={hideEditCard} />
+            <EditCard
+              hideEditCard={hideEditCard}
+              handleDeleteItem={() => {
+                handleDeleteItem(id);
+              }}
+            />
           </div>
         )}
       </div>
