@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import TextInputField from "./TextInputField";
 import { RiDeleteBin6Line, RiMenuAddLine } from "react-icons/ri";
 import { Draggable } from "react-beautiful-dnd";
@@ -54,14 +54,15 @@ const AddTask: React.FC<titles> = ({
     <>
       <div
         className="rounded-[12px] flex flex-col items-start  bg-[#F1F2F4] shadow-raised
-      my-10 mx-4 px-3 py-2 h-fit gap-2"
+      my-10 ml-4  px-3 py-2 h-fit gap-2 relative "
       >
-        <div className="flex items-center justify-between w-full">
+        <div className="flex items-center justify-between w-full ">
           <div className="text-sm font-bold text-[#172B4D]"> {title}</div>
 
           <div className="flex items-center justify-center">
             <BsThreeDots
-              className="cursor-pointer hover:bg-[#626f86] h-5 w-5 rounded-sm"
+              className="cursor-pointer text-[#6A768C] hover:bg-[#091E4224]
+               h-8 w-8 p-2 rounded-md"
               onClick={showEditCard}
             />
           </div>
@@ -73,19 +74,21 @@ const AddTask: React.FC<titles> = ({
               <div
                 ref={provided.innerRef}
                 {...provided.draggableProps}
-                className="w-full"
+                className="w-full 
+                  "
               >
                 <>
                   {
                     <div
                       key={i}
-                      className="flex items-center my-1 border-[#B7BEC9] bg-[#ffffff]
-                       border-1 h-10 -mr-4 rounded-md text-[#2F415F] text-sm
-                       hover:border-blue-950 w-[250px] px-3 font-normal"
+                      className="flex items-center my-1  border-transparent
+                       bg-[#ffffff] border-2 h-10 -mr-4 rounded-xl hover:border-[#0055CC]
+                        text-[#2F415F] text-sm justify-between 
+                        group w-[250px] px-3 font-medium shadow-raised hover:border-2"
                       {...provided.dragHandleProps}
                     >
                       {item.name}
-                      {/* <FaPencilAlt className="" /> */}
+                      <FaPencil className="hidden group-hover:block text-[#6A768C]" />
                     </div>
                   }
                 </>
@@ -98,52 +101,106 @@ const AddTask: React.FC<titles> = ({
           {showInput && (
             <>
               <div
-                className="flex  items-center my-3 border-[#B7BEC9] border-2 h-10 -mr-4 rounded-md  font-semibold
-                 w-[250px] hover:border-[rgb(12,102,228)] px-3 group justify-between"
+                className="flex items-center my-1 border-transparent
+                bg-[#ffffff] border-2 h-10 -mr-4
+                 text-[#2F415F]  justify-between
+                text-sm hover:border-[#0055CC] group rounded-xl
+                  hover:border-2 w-[250px] px-3 font-normal shadow-raised"
               >
                 <TextInputField
-                  placeholder="task"
+                  className="bg-transparent text-sm  border-none w-[150px] 
+                  
+                   focus:outline-none text-[#44546F]"
+                  placeholder="Enter title for this Card..."
                   value={addNewValue}
                   onChange={(e) => {
                     setAddNewValue(e.target.value);
                   }}
                 />
-                <FaPencil className="hidden group-hover:block" />
+                <FaPencil className="hidden group-hover:block text-[#6A768C]" />
               </div>
             </>
           )}
         </div>
 
         <button type="submit">
-          <div className="flex gap-4 items-center   rounded-md pr-4 min-w-[250px] ">
+          <div className="flex gap-4 items-center rounded-md min-w-[250px] ">
             {!showInput ? (
               <div
-                className="flex items-center hover:bg-[#6B7588] h-8
-               rounded-md justify-start w-full p-2 font-bold transition-colors duration-85 ease-in-out"
+                className="flex items-center  h-8
+               rounded-md justify-start w-full  font-bold 
+               transition-colors duration-85 ease-in-out"
               >
                 <>
-                  <span>
-                    <svg
-                      className="size-4 text-[#44546F]  "
-                      width="24"
-                      height="24"
-                      role="presentation"
-                      focusable="false"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
+                  <div className="flex items-center justify-between w-full ">
+                    <div
+                      className="flex items-center hover:bg-[#091E4224] 
+                    w-full rounded-md h-8 p-3  "
                     >
-                      <path
-                        d="M12 3C11.4477 3 11 3.44772 11 4V11L4 11C3.44772 11 3 11.4477 3 12C3 12.5523 3.44772 13 4 13H11V20C11 20.5523 11.4477 21 12 21C12.5523 21 13 20.5523 13 20V13H20C20.5523 13 21 12.5523 21 12C21 11.4477 20.5523 11 20 11L13 11V4C13 3.44772 12.5523 3 12 3Z"
-                        fill="currentColor"
-                      ></path>
-                    </svg>
-                  </span>
+                      <span>
+                        <svg
+                          className="size-4 text-[#44546F]  "
+                          width="24"
+                          height="24"
+                          role="presentation"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M12 3C11.4477 3 11 3.44772 11 4V11L4 11C3.44772 11 3 11.4477 3 12C3 12.5523 3.44772 13 4 13H11V20C11 20.5523 11.4477 21 12 21C12.5523 21 13 20.5523 13 20V13H20C20.5523 13 21 12.5523 21 12C21 11.4477 20.5523 11 20 11L13 11V4C13 3.44772 12.5523 3 12 3Z"
+                            fill="currentColor"
+                          ></path>
+                        </svg>
+                      </span>
 
-                  <div
-                    onClick={showInputField}
-                    className="text-[#44546F] text-sm p-3 rounded-md group"
-                  >
-                    Add a Card
+                      <div
+                        onClick={showInputField}
+                        className="text-[#44546F] text-sm p-3 rounded-md group "
+                      >
+                        Add a Card
+                      </div>
+                    </div>
+                    <span
+                      className="text-[#6A768C]  flex items-center hover:bg-[#091E4224]
+                    rounded-md p-2"
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        role="presentation"
+                        focusable="false"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M3 6V5C3 3.89543 3.89543 3 5 3H6C6.55228 3 7 3.44772 7 4C7 4.55228 6.55228 5 6 5H5V6C5 6.55228 4.55228 7 4 7C3.44772 7 3 6.55228 3 6Z"
+                          fill="currentColor"
+                        ></path>
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M6 8C6 6.89543 6.89543 6 8 6H19C20.1046 6 21 6.89543 21 8V18C21 19.1046 20.1046 20 19 20H8C6.89543 20 6 19.1046 6 18V8ZM8 8H19V14H8V8ZM18 18C17.4477 18 17 17.5523 17 17C17 16.4477 17.4477 16 18 16C18.5523 16 19 16.4477 19 17C19 17.5523 18.5523 18 18 18ZM8 17C8 17.5523 8.44772 18 9 18H12C12.5523 18 13 17.5523 13 17C13 16.4477 12.5523 16 12 16H9C8.44772 16 8 16.4477 8 17Z"
+                          fill="currentColor"
+                        ></path>
+                        <path
+                          d="M4 14C3.44772 14 3 14.4477 3 15V16C3 17.1046 3.89543 18 5 18V15C5 14.4477 4.55228 14 4 14Z"
+                          fill="currentColor"
+                        ></path>
+                        <path
+                          d="M3 9C3 8.44772 3.44772 8 4 8C4.55228 8 5 8.44772 5 9V12C5 12.5523 4.55228 13 4 13C3.44772 13 3 12.5523 3 12V9Z"
+                          fill="currentColor"
+                        ></path>
+                        <path
+                          d="M8 4C8 3.44772 8.44772 3 9 3H13C13.5523 3 14 3.44772 14 4C14 4.55228 13.5523 5 13 5H9C8.44772 5 8 4.55228 8 4Z"
+                          fill="currentColor"
+                        ></path>
+                        <path
+                          d="M16 3C15.4477 3 15 3.44772 15 4C15 4.55228 15.4477 5 16 5H19C19 3.89543 18.1046 3 17 3H16Z"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                    </span>
                   </div>
                 </>
               </div>
@@ -163,7 +220,13 @@ const AddTask: React.FC<titles> = ({
                   >
                     Add card
                   </button>
-                  <span className="h-8 w-8 rounded-md flex items-center justify-center hover:bg-[#6B7588] ">
+                  <span
+                    className="h-8 w-8 rounded-md flex items-center justify-center
+                   hover:bg-[#6B7588] "
+                    onClick={() => {
+                      setShowInput(false);
+                    }}
+                  >
                     <svg
                       width="24"
                       height="24"
@@ -188,12 +251,13 @@ const AddTask: React.FC<titles> = ({
         </button>
 
         {openEditCard && (
-          <div className="absolute ">
+          <div className="absolute top-[2rem] left-[15rem] rounded-md z-10 ">
             <EditCard
               hideEditCard={hideEditCard}
               handleDeleteItem={() => {
                 handleDeleteItem(id);
               }}
+              // checkIfClickedOutside={checkIfClickedOutside}
             />
           </div>
         )}

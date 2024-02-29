@@ -130,8 +130,20 @@ const HomePage: React.FC = () => {
     title: string,
     id: number | string
   ) => {
+    if (title.trim() === "") {
+      alert("list cannot be empty!");
+      return; // Exit the function if title is empty
+    }
     if (index !== undefined && index >= 0 && index < card.length) {
       const selectedCard: any = card[index];
+      if (
+        selectedCard.components.some(
+          (component: any) => component.name === title
+        )
+      ) {
+        alert("Title must be unique!");
+        return; // Exit the function if title already exists
+      }
 
       selectedCard.components.push({
         name: title,
@@ -168,7 +180,7 @@ const HomePage: React.FC = () => {
         </h1>
 
         <div className="flex flex-row-reverse justify-end w-fit">
-          <div className="mt-5">
+          <div className="mt-5 mx-4">
             <CreateNewCard onClick={addValueNewCard} />
           </div>
 

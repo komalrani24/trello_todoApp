@@ -17,7 +17,8 @@ const TextInputField: React.FC<inputType> = ({ placeholder, ...rest }) => {
         <input
           type="text"
           placeholder={placeholder}
-          className="w-[100px]  border-none   focus:outline-none text-sm
+          className="w-[100px] border-none 
+            
            text-[#172B4D] "
           {...rest}
         ></input>
