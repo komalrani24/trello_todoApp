@@ -49,12 +49,13 @@ const AddTask: React.FC<titles> = ({
   const hideEditCard = () => {
     setOpenEditCard(false);
   };
+  console.log(addNewValue, "ggfg");
 
   return (
     <>
       <div
         className="rounded-[12px] flex flex-col items-start  bg-[#F1F2F4] shadow-raised
-      my-10 ml-4  px-3 py-2 h-fit gap-2 relative "
+      my-10 ml-4  px-3 py-2 max-h-[400px] gap-2 relative  overflow-y-auto "
       >
         <div className="flex items-center justify-between w-full ">
           <div className="text-sm font-bold text-[#172B4D]"> {title}</div>
@@ -66,34 +67,47 @@ const AddTask: React.FC<titles> = ({
               onClick={showEditCard}
             />
           </div>
+          {/* <button>edit</button>
+          <button>delete</button> */}
         </div>
 
         {components.map((item: Components, i: number) => (
-          <Draggable draggableId={item.id.toString()} index={i}>
-            {(provided) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.draggableProps}
-                className="w-full 
-                  "
-              >
-                <>
-                  {
-                    <div
-                      key={i}
-                      className="flex items-center my-1  border-transparent
-                       bg-[#ffffff] border-2 h-10 -mr-4 rounded-xl hover:border-[#0055CC]
-                        text-[#2F415F] text-sm justify-between 
-                        group w-[250px] px-3 font-medium shadow-raised hover:border-2"
-                      {...provided.dragHandleProps}
-                    >
-                      {item.name}
-                      <FaPencil className="hidden group-hover:block text-[#6A768C]" />
-                    </div>
-                  }
-                </>
-              </div>
-            )}
+          <Draggable draggableId={item.id.toString()} index={i} key={item.id}>
+            {(provided, snapshot) => {
+              console.log(snapshot, "snapshot");
+              const isDragging = snapshot.isDragging;
+              console.log(isDragging, "dragging");
+              return (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.draggableProps}
+                  // className={}
+                  className={`w-full relative  `}
+                >
+                  <div
+                    className={`flex items-center my-1 border-transparent 
+                    bg-[#ffffff] border-2 h-10 -mr-4 rounded-xl
+                     hover:border-[#374866] text-[#2F415F] text-sm
+                      justify-between group w-[250px] px-3 font-medium 
+                      shadow-raised hover:border-2 relative ${
+                        isDragging
+                          ? "transform skew-y-3 ... bg-white opacity-[0.5] "
+                          : ""
+                      } `}
+                    {...provided.dragHandleProps}
+                  >
+                    {item.name}
+                    <FaPencil
+                      className={`hidden group-hover:block text-[#6A768C]`}
+                    />
+                  </div>
+                  <div
+                    className={`absolute w-full h-12 top-0 -z-10  bg-[white] 
+                    ${isDragging ? "flex " : "hidden"} `}
+                  ></div>
+                </div>
+              );
+            }}
           </Draggable>
         ))}
 
@@ -104,7 +118,7 @@ const AddTask: React.FC<titles> = ({
                 className="flex items-center my-1 border-transparent
                 bg-[#ffffff] border-2 h-10 -mr-4
                  text-[#2F415F]  justify-between
-                text-sm hover:border-[#0055CC] group rounded-xl
+                text-sm hover:border-[#374866] group rounded-xl
                   hover:border-2 w-[250px] px-3 font-normal shadow-raised"
               >
                 <TextInputField

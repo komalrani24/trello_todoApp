@@ -49,7 +49,7 @@ const CreateNewCard = (props: any) => {
         <div className=" w-[300px]  bg-[#fff] my-5 rounded-md flex flex-col gap-3 px-3 ">
           <TextInputField
             className=" h-10 rounded-md p-2 text-sm text-[#172B4D] border-2 mt-3
-             hover:border-[rgb(12,102,228)]"
+            hover:border-[#374866]"
             placeholder="title"
             value={title}
             onChange={addTitle}
