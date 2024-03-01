@@ -176,7 +176,7 @@ const HomePage: React.FC = () => {
           className="text-center font-bold text-2xl text-[#fff] bg-[#4D5D77] h-12 
         flex items-center justify-center p-4"
         >
-          TODO LIST
+          TODO LIST try
         </h1>
 
         <div className="flex flex-row-reverse justify-end w-fit">
