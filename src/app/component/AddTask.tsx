@@ -55,7 +55,7 @@ const AddTask: React.FC<titles> = ({
     <>
       <div
         className="rounded-[12px] flex flex-col items-start  bg-[#F1F2F4] shadow-raised
-      my-10 ml-4  px-3 py-2 max-h-[80vh] gap-2 relative  overflow-y-auto "
+      my-10 ml-4  px-3 py-2 max-h-[80vh] gap-2 relative "
       >
         <div className="flex items-center justify-between w-full ">
           <div className="text-sm font-bold text-[#172B4D]"> {title}</div>
@@ -102,7 +102,7 @@ const AddTask: React.FC<titles> = ({
                     />
                   </div>
                   <div
-                    className={`absolute w-full h-12 top-0 -z-10  bg-[white] 
+                    className={`absolute w-full h-12 top-0   bg-[white] 
                     ${isDragging ? "flex " : "hidden"} `}
                   ></div>
                 </div>
@@ -265,7 +265,7 @@ const AddTask: React.FC<titles> = ({
         </button>
 
         {openEditCard && (
-          <div className="absolute top-[2rem] left-[15rem] rounded-md z-10 ">
+          <div className="absolute top-[2rem] left-[15rem] rounded-md z-50 ">
             <EditCard
               hideEditCard={hideEditCard}
               handleDeleteItem={() => {

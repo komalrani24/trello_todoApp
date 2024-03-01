@@ -25,8 +25,8 @@ const EditCard = (props: any) => {
 
   return (
     <div
-      className="rounded-lg flex flex-col items-start  bg-[#FFFFFF] 
-     mx-4  h-fit gap-3 w-[250px] py-3"
+      className=" absolute  rounded-lg flex flex-col items-start  bg-[#FFFFFF] 
+     mx-4  h-fit gap-3 w-[250px] py-3 "
       ref={editModel}
     >
       <div className="flex items-center w-full justify-between  px-3">
