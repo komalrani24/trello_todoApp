@@ -189,7 +189,7 @@ const HomePage: React.FC = () => {
           <div className="flex">
             {card.length &&
               card.map((item, index) => (
-                <Droppable droppableId={`droppable${item.id}`}>
+                <Droppable droppableId={`droppable${item.id}`} key={index}>
                   {(provided) => (
                     <div
                       key={index}

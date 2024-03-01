@@ -55,7 +55,7 @@ const AddTask: React.FC<titles> = ({
     <>
       <div
         className="rounded-[12px] flex flex-col items-start  bg-[#F1F2F4] shadow-raised
-      my-10 ml-4  px-3 py-2 max-h-[400px] gap-2 relative  overflow-y-auto "
+      my-10 ml-4  px-3 py-2 max-h-[80vh] gap-2 relative  overflow-y-auto "
       >
         <div className="flex items-center justify-between w-full ">
           <div className="text-sm font-bold text-[#172B4D]"> {title}</div>

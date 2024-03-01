@@ -21,9 +21,7 @@ const EditCard = (props: any) => {
 
     return () =>
       document.removeEventListener("mousedown", checkIfClickedOutside);
-  }, [editModel]);
-
-  
+  });
 
   return (
     <div
