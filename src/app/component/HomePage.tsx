@@ -1,5 +1,12 @@
 "use client";
-import React, { Component, useEffect, useState } from "react";
+import React, {
+  Component,
+  MouseEvent,
+  MutableRefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { db } from "../firebaseConfig";
 import { ref } from "firebase/storage";
 import {
@@ -168,18 +175,57 @@ const HomePage: React.FC = () => {
       console.error("Error deleting document: ", error);
     }
   };
+  //let mouseDown = false;
+  useEffect(() => {
+    let mouseDown = false;
+    let startX = 0,
+      scrollLeft = 0;
+    const slider = document.querySelector(".parent") as HTMLElement;
+    const startDragging = (e: any) => {
+      mouseDown = true;
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+    };
+    const stopDragging = (e: any) => {
+      mouseDown = false;
+    };
+    const move = (e: any) => {
+      e.preventDefault();
+      if (!mouseDown) {
+        return;
+      }
+      const x = e.pageX - slider.offsetLeft;
+      const scroll = x - startX;
+      slider.scrollLeft = scrollLeft - scroll;
+    };
+    // Add the event listeners
+    slider.addEventListener("mousemove", move, false);
+    slider.addEventListener("mousedown", startDragging, false);
+    slider.addEventListener("mouseup", stopDragging, false);
+    slider.addEventListener("mouseleave", stopDragging, false);
+
+    return () => {
+      slider.removeEventListener("mousemove", move, false);
+      slider.removeEventListener("mousedown", startDragging, false);
+      slider.removeEventListener("mouseup", stopDragging, false);
+      slider.removeEventListener("mouseleave", stopDragging, false);
+    };
+  }, []);
 
   return (
-    <>
+    <div className="parent">
       <DragDropContext onDragEnd={onDragEnd}>
         <h1
           className="text-center font-bold text-2xl text-[#fff] bg-[#4D5D77] h-12 
-        flex items-center justify-center p-4"
+        flex items-center justify-center p-4 fixed w-full top-0 "
         >
-          TODO LIST try
+          TODO LIST
         </h1>
 
-        <div className="flex flex-row-reverse justify-end w-fit">
+        <div
+          className="flex flex-row-reverse justify-end w-fit mt-10 "
+          // ref={ref}
+        >
           <div className="mt-5 mx-4">
             <CreateNewCard onClick={addValueNewCard} />
           </div>
@@ -213,7 +259,7 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </DragDropContext>
-    </>
+    </div>
   );
 };
 

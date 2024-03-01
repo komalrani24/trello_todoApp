@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import TextInputField from "./TextInputField";
 import { RiDeleteBin6Line, RiMenuAddLine } from "react-icons/ri";
 import { Draggable } from "react-beautiful-dnd";
@@ -49,13 +49,13 @@ const AddTask: React.FC<titles> = ({
   const hideEditCard = () => {
     setOpenEditCard(false);
   };
-  console.log(addNewValue, "ggfg");
+  // console.log(addNewValue, "ggfg");
 
   return (
     <>
       <div
         className="rounded-[12px] flex flex-col items-start  bg-[#F1F2F4] shadow-raised
-      my-10 ml-4  px-3 py-2 max-h-[80vh] gap-2 relative "
+      my-10 ml-4 px-3 py-2 h-fit gap-2  "
       >
         <div className="flex items-center justify-between w-full ">
           <div className="text-sm font-bold text-[#172B4D]"> {title}</div>
@@ -70,7 +70,7 @@ const AddTask: React.FC<titles> = ({
           {/* <button>edit</button>
           <button>delete</button> */}
         </div>
-
+        {/* <div className="max-h-[500px] overflow-y-auto "> */}
         {components.map((item: Components, i: number) => (
           <Draggable draggableId={item.id.toString()} index={i} key={item.id}>
             {(provided, snapshot) => {
@@ -82,14 +82,14 @@ const AddTask: React.FC<titles> = ({
                   ref={provided.innerRef}
                   {...provided.draggableProps}
                   // className={}
-                  className={`w-full relative  `}
+                  className={`w-full relative   `}
                 >
                   <div
                     className={`flex items-center my-1 border-transparent 
-                    bg-[#ffffff] border-2 h-10 -mr-4 rounded-xl
+                    bg-[#ffff] border-2 h-10 -mr-4 rounded-xl overflow-y:auto
                      hover:border-[#374866] text-[#2F415F] text-sm
                       justify-between group w-[250px] px-3 font-medium 
-                      shadow-raised hover:border-2 relative ${
+                      shadow-raised hover:border-2 relative  ${
                         isDragging
                           ? "transform skew-y-3 ... bg-white opacity-[0.5] "
                           : ""
@@ -139,17 +139,58 @@ const AddTask: React.FC<titles> = ({
 
         <button type="submit">
           <div className="flex gap-4 items-center rounded-md min-w-[250px] ">
-            {!showInput ? (
+            {showInput ? (
+              <>
+                <div className="flex items-center gap-4 w-full">
+                  <button
+                    className="text-[#fff] bg-[rgb(12,102,228)] h-8 w-[40%] rounded-md"
+                    type="submit"
+                    onClick={() => {
+                      makeCardList(index, addNewValue, id);
+
+                      setAddNewValue("");
+                      setShowInput(false);
+                    }}
+                  >
+                    Add card
+                  </button>
+                  <span
+                    className="h-8 w-8 rounded-md flex items-center justify-center
+                  hover:bg-[#6B7588] "
+                    onClick={() => {
+                      setShowInput(false);
+                    }}
+                  >
+                    <svg
+                      width="24"
+                      height="24"
+                      role="presentation"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="size-5 text-[#172B4D]"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12Z"
+                        fill="currentColor"
+                      ></path>
+                    </svg>
+                  </span>
+                </div>
+              </>
+            ) : (
               <div
                 className="flex items-center  h-8
-               rounded-md justify-start w-full  font-bold 
-               transition-colors duration-85 ease-in-out"
+           rounded-md justify-start w-full  font-bold 
+           transition-colors duration-85 ease-in-out"
               >
                 <>
                   <div className="flex items-center justify-between w-full ">
                     <div
-                      className="flex items-center hover:bg-[#091E4224] 
-                    w-full rounded-md h-8 p-3  "
+                      className="flex items-center hover:bg-[#091E4224] w-full
+                       rounded-md h-8 p-3 overflow-hidden"
                     >
                       <span>
                         <svg
@@ -177,7 +218,7 @@ const AddTask: React.FC<titles> = ({
                     </div>
                     <span
                       className="text-[#6A768C]  flex items-center hover:bg-[#091E4224]
-                    rounded-md p-2"
+                rounded-md p-2"
                     >
                       <svg
                         width="20"
@@ -218,51 +259,10 @@ const AddTask: React.FC<titles> = ({
                   </div>
                 </>
               </div>
-            ) : (
-              // </div>
-              <>
-                <div className="flex items-center gap-4 w-full">
-                  <button
-                    className="text-[#fff] bg-[rgb(12,102,228)] h-8 w-[40%] rounded-md"
-                    type="submit"
-                    onClick={() => {
-                      makeCardList(index, addNewValue, id);
-
-                      setAddNewValue("");
-                      setShowInput(false);
-                    }}
-                  >
-                    Add card
-                  </button>
-                  <span
-                    className="h-8 w-8 rounded-md flex items-center justify-center
-                   hover:bg-[#6B7588] "
-                    onClick={() => {
-                      setShowInput(false);
-                    }}
-                  >
-                    <svg
-                      width="24"
-                      height="24"
-                      role="presentation"
-                      focusable="false"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="size-5 text-[#172B4D]"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12Z"
-                        fill="currentColor"
-                      ></path>
-                    </svg>
-                  </span>
-                </div>
-              </>
             )}
           </div>
         </button>
+        {/* </div> */}
 
         {openEditCard && (
           <div className="absolute top-[2rem] left-[15rem] rounded-md z-50 ">
