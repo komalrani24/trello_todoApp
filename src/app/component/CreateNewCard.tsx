@@ -5,11 +5,13 @@ import TextInputField from "./TextInputField";
 const CreateNewCard = (props: any) => {
   const [showCard, setshowCard] = useState<boolean>(false);
   const [title, setTitle] = useState("");
+
   const addNewcard = () => {
     setshowCard(!showCard);
   };
   const addTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.currentTarget.value);
+    // setTitle("dfbsdhfs");
   };
   console.log(title);
 
@@ -46,7 +48,10 @@ const CreateNewCard = (props: any) => {
           </div>
         </>
       ) : (
-        <div className=" w-[300px]  bg-[#fff] my-5 rounded-md flex flex-col gap-3 px-3 ">
+        <div
+          className=" w-[300px]  bg-[#fff] my-5 rounded-md flex flex-col gap-3 px-3 "
+          contentEditable
+        >
           <TextInputField
             className=" h-10 rounded-md p-2 text-sm text-[#172B4D] border-2 mt-3
             hover:border-[#374866]"

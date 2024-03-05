@@ -1,5 +1,11 @@
 "use client";
-import React, { MutableRefObject, useEffect, useRef, useState } from "react";
+import React, {
+  ChangeEvent,
+  MutableRefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import TextInputField from "./TextInputField";
 import { RiDeleteBin6Line, RiMenuAddLine } from "react-icons/ri";
 import { Draggable } from "react-beautiful-dnd";
@@ -24,6 +30,11 @@ interface titles {
     id: string | number
   ) => void; // Define the makeCardList function type
   handleDeleteItem: (id: string | number) => Promise<void>;
+  editTitleforCard: (index: number | undefined) => void;
+  isEdit: boolean;
+  getIndexOfCard: number | undefined;
+  saveTitleforCard: (e: ChangeEvent, index: number | undefined) => void;
+  // updatedTitle: string;
 }
 
 const AddTask: React.FC<titles> = ({
@@ -33,15 +44,21 @@ const AddTask: React.FC<titles> = ({
   components,
   makeCardList,
   handleDeleteItem,
+  editTitleforCard,
+  isEdit,
+  getIndexOfCard,
+  saveTitleforCard,
+  // updatedTitle,
 }) => {
   const [addNewValue, setAddNewValue] = useState<string>("");
-  console.log(id, "id");
+  // console.log(id, "id");
 
   const [showInput, setShowInput] = useState<boolean>(false);
   const [openEditCard, setOpenEditCard] = useState<boolean>(false);
 
   const showInputField = () => {
     setShowInput(!showInput);
+    // console.log(showInput, "sddjsd");
   };
   const showEditCard = () => {
     setOpenEditCard(!openEditCard);
@@ -49,8 +66,8 @@ const AddTask: React.FC<titles> = ({
   const hideEditCard = () => {
     setOpenEditCard(false);
   };
-  // console.log(addNewValue, "ggfg");
 
+  console.log(index, "ghdhgjh");
   return (
     <>
       <div
@@ -58,7 +75,26 @@ const AddTask: React.FC<titles> = ({
       my-10 ml-4 px-3 py-2 h-fit gap-2  "
       >
         <div className="flex items-center justify-between w-full ">
-          <div className="text-sm font-bold text-[#172B4D]"> {title}</div>
+          {isEdit && index === getIndexOfCard ? (
+            <div
+              className="text-sm font-bold my-3
+        rounded-md text-[#172B4D] w-full h-8 flex items-center pl-1 bg-transparent"
+            >
+              <TextInputField
+                onChange={(e) => saveTitleforCard(e, index)}
+                className="w-full   rounded-lg border-[#374866] bg-transparent
+              h-10"
+              />
+            </div>
+          ) : (
+            <div
+              className="text-sm font-bold
+            rounded-md text-[#172B4D] w-full h-8 flex items-center pl-1"
+              onClick={() => editTitleforCard(index)}
+            >
+              {title}
+            </div>
+          )}
 
           <div className="flex items-center justify-center">
             <BsThreeDots
@@ -67,42 +103,41 @@ const AddTask: React.FC<titles> = ({
               onClick={showEditCard}
             />
           </div>
-          {/* <button>edit</button>
-          <button>delete</button> */}
+          {/* <button onClick={editTitle}>edit</button> */}
+          {/* <button>delete</button> */}
         </div>
         {/* <div className="max-h-[500px] overflow-y-auto "> */}
         {components.map((item: Components, i: number) => (
           <Draggable draggableId={item.id.toString()} index={i} key={item.id}>
             {(provided, snapshot) => {
-              console.log(snapshot, "snapshot");
+              // console.log(snapshot, "snapshot");
               const isDragging = snapshot.isDragging;
-              console.log(isDragging, "dragging");
+              // console.log(isDragging, "dragging");
               return (
                 <div
                   ref={provided.innerRef}
                   {...provided.draggableProps}
                   // className={}
-                  className={`w-full relative   `}
+                  className={`w-full relative`}
                 >
                   <div
                     className={`flex items-center my-1 border-transparent 
                     bg-[#ffff] border-2 h-10 -mr-4 rounded-xl overflow-y:auto
-                     hover:border-[#374866] text-[#2F415F] text-sm
+                     hover:border-[#374866] text-[#2F415F] text-sm 
                       justify-between group w-[250px] px-3 font-medium 
                       shadow-raised hover:border-2 relative  ${
-                        isDragging
-                          ? "transform skew-y-3 ... bg-white opacity-[0.5] "
-                          : ""
+                        isDragging ? "transform skew-y-3 ... bg-white  " : ""
                       } `}
                     {...provided.dragHandleProps}
                   >
                     {item.name}
+
                     <FaPencil
                       className={`hidden group-hover:block text-[#6A768C]`}
                     />
                   </div>
                   <div
-                    className={`absolute w-full h-12 top-0   bg-[white] 
+                    className={`absolute w-full h-12 top-0 -z-10 bg-[white] opacity-[0.5]
                     ${isDragging ? "flex " : "hidden"} `}
                   ></div>
                 </div>

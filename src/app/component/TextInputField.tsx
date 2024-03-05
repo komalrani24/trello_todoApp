@@ -9,6 +9,7 @@ interface inputType {
   value?: string | undefined;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
+  onBlur?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 const TextInputField: React.FC<inputType> = ({ placeholder, ...rest }) => {
   return (

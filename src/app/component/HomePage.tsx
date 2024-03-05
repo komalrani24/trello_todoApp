@@ -21,9 +21,6 @@ import AddTask from "./AddTask";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 
 import CreateNewCard from "./CreateNewCard";
-import { FaPlus } from "react-icons/fa";
-import TextInputField from "./TextInputField";
-import EditCard from "./EditCard";
 
 interface data {
   // newId: string;
@@ -36,6 +33,8 @@ interface data {
 const HomePage: React.FC = () => {
   const [card, setCard] = useState<data[]>([]); //for input card
   // const [openEditCard, setOpenEditCard] = useState<boolean>(false);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [getIndexOfCard, setGetIndexofCard] = useState<number | undefined>();
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "card"), (snapshot) => {
@@ -72,7 +71,7 @@ const HomePage: React.FC = () => {
         source.index,
         1
       );
-      console.log(item, "item");
+      // console.log(item, "item");
       newData[newDroppableIndex].components.splice(destination.index, 0, item);
       newData.forEach(async (cardData) => {
         const postDocRef = doc(db, "card", String(cardData.id));
@@ -102,6 +101,7 @@ const HomePage: React.FC = () => {
   //           id: card.length + 1,
   //           title: title,
   //           components: [],
+  //           editable: true,
   //         },
   //       ]);
   //     else {
@@ -164,7 +164,7 @@ const HomePage: React.FC = () => {
       await updateDoc(postDocRef, updatedFields);
     }
   };
-  console.log(card, "card");
+  // console.log(card, "card");
 
   const handleDeleteItem = async (id: string | number) => {
     try {
@@ -211,7 +211,41 @@ const HomePage: React.FC = () => {
       slider.removeEventListener("mouseleave", stopDragging, false);
     };
   }, []);
+  // for edit title
+  const editTitleforCard = (i: number | undefined) => {
+    // console.log(i, "cardIndex");
+    setGetIndexofCard(i);
+    setIsEdit(true);
+  };
+  //for onChange handler
+  // const updateTitleforCard = (e: any, index: any) => {
+  //   console.log(e, index, "events");
+  //   setCard((prev) => [
+  //     ...prev.slice(0, index),
 
+  //     {
+  //       ...card[index],
+  //       title: e.target.value,
+  //     },
+  //     ...prev.slice(index + 1),
+  //   ]);
+  // };
+  console.log(card, "cardss");
+  const updateTitleforCard = async (e: any, index: any) => {
+    const docRef = doc(db, "card", String(card[index].id));
+
+    // Update the data in Firestore
+    try {
+      await updateDoc(docRef, {
+        title: e.target.value, // Update the 'title' field with the new value
+        // You can update other fields similarly if needed
+      });
+
+      console.log("Document successfully updated!");
+    } catch (error) {
+      console.error("Error updating document: ", error);
+    }
+  };
   return (
     <div className="parent">
       <DragDropContext onDragEnd={onDragEnd}>
@@ -249,8 +283,12 @@ const HomePage: React.FC = () => {
                         makeCardList={makeCardList}
                         components={item.components}
                         handleDeleteItem={handleDeleteItem}
+                        editTitleforCard={editTitleforCard}
+                        isEdit={isEdit}
+                        getIndexOfCard={getIndexOfCard}
+                        saveTitleforCard={updateTitleforCard}
+                        // updatedTitle={updatedTitle}
                       />
-
                       {provided.placeholder}
                     </div>
                   )}
